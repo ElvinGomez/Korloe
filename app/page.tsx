@@ -96,7 +96,7 @@ export default function HomePage() {
                 </div>
                 {frontImage && (
                   <img
-                    src={frontImage || "/placeholder.svg"}
+                    src={frontImage}
                     alt="Vista previa frontal"
                     className="w-32 h-32 object-cover rounded-lg border-2 border-stone-200"
                   />
@@ -133,7 +133,7 @@ export default function HomePage() {
                 </div>
                 {backImage && (
                   <img
-                    src={backImage || "/placeholder.svg"}
+                    src={backImage}
                     alt="Vista previa trasera"
                     className="w-32 h-32 object-cover rounded-lg border-2 border-stone-200"
                   />
