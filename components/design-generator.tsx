@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Download } from 'lucide-react'
 
 // Store the actual font family name
@@ -57,6 +59,7 @@ interface DesignGeneratorProps {
   size: string
   price: string
   designType: 'story-single' | 'story-double' | 'post'
+  onDesignTypeChange: (type: 'story-single' | 'story-double' | 'post') => void
 }
 
 export function DesignGenerator({
@@ -65,6 +68,7 @@ export function DesignGenerator({
   size,
   price,
   designType,
+  onDesignTypeChange,
 }: DesignGeneratorProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -87,7 +91,7 @@ export function DesignGenerator({
     // Set canvas dimensions based on design type
     if (designType === 'post') {
       canvas.width = 1080
-      canvas.height = 1080
+      canvas.height = 1350
     } else {
       canvas.width = 1080
       canvas.height = 1920
@@ -345,21 +349,51 @@ export function DesignGenerator({
     link.click()
   }
 
+  // Calculate aspect ratio based on design type
+  const aspectRatio = designType === 'post' ? '4 / 5' : '9 / 16'
+  
   return (
     <div className="space-y-4">
-      <div className="relative bg-stone-100 rounded-lg overflow-hidden border-2 border-stone-200">
-        <canvas
-          ref={canvasRef}
-          className="w-full h-auto"
-          style={{ maxHeight: '600px' }}
-        />
-        {isGenerating && (
-          <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-900 mx-auto mb-2" />
-              <p className="text-stone-600">Generando diseño...</p>
+      <div className="relative bg-stone-100 rounded-lg overflow-hidden border-2 border-stone-200 flex items-center justify-center p-4 lg:p-6">
+        <div 
+          className="relative w-full mx-auto"
+          style={{ 
+            aspectRatio: aspectRatio,
+            maxWidth: designType === 'post' ? 'min(500px, 100%)' : 'min(350px, 100%)',
+          }}
+        >
+          <canvas
+            ref={canvasRef}
+            className="w-full h-full"
+            style={{ display: 'block' }}
+          />
+          {isGenerating && (
+            <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-lg">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-900 mx-auto mb-2" />
+                <p className="text-stone-600">Generando diseño...</p>
+              </div>
             </div>
-          </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Design Type Selection */}
+      <div className="space-y-2">
+        <Label className="text-base font-semibold">Tipo de Diseño</Label>
+        <Tabs value={designType} onValueChange={(v) => onDesignTypeChange(v as 'story-single' | 'story-double' | 'post')}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="story-single">Story Simple</TabsTrigger>
+            <TabsTrigger value="story-double" disabled={!backImage}>
+              Story Doble
+            </TabsTrigger>
+            <TabsTrigger value="post">Post</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        {designType === 'story-double' && !backImage && (
+          <p className="text-sm text-amber-600">
+            Necesitas subir la imagen trasera para usar Story Doble
+          </p>
         )}
       </div>
       

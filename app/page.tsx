@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Upload, ImageIcon } from 'lucide-react'
 import { DesignGenerator } from '@/components/design-generator'
 
@@ -55,7 +54,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Form Section */}
           <Card className="border-stone-200">
             <CardHeader>
@@ -168,25 +167,6 @@ export default function HomePage() {
                   className="text-lg"
                 />
               </div>
-
-              {/* Design Type Selection */}
-              <div className="space-y-2">
-                <Label className="text-base font-semibold">Tipo de Diseño</Label>
-                <Tabs value={designType} onValueChange={(v) => setDesignType(v as 'story-single' | 'story-double' | 'post')}>
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="story-single">Story Simple</TabsTrigger>
-                    <TabsTrigger value="story-double" disabled={!backImage}>
-                      Story Doble
-                    </TabsTrigger>
-                    <TabsTrigger value="post">Post</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                {designType === 'story-double' && !backImage && (
-                  <p className="text-sm text-amber-600">
-                    Necesitas subir la imagen trasera para usar Story Doble
-                  </p>
-                )}
-              </div>
             </CardContent>
           </Card>
 
@@ -198,7 +178,7 @@ export default function HomePage() {
                 Tu diseño se mostrará aquí
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col">
               {canGenerate ? (
                 <DesignGenerator
                   frontImage={frontImage}
@@ -206,11 +186,12 @@ export default function HomePage() {
                   size={size}
                   price={price}
                   designType={designType}
+                  onDesignTypeChange={setDesignType}
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center h-96 border-2 border-dashed border-stone-300 rounded-lg bg-stone-50">
+                <div className="flex flex-col items-center justify-center min-h-[400px] lg:min-h-[600px] border-2 border-dashed border-stone-300 rounded-lg bg-stone-50">
                   <ImageIcon className="h-16 w-16 text-stone-400 mb-4" />
-                  <p className="text-stone-500 text-center">
+                  <p className="text-stone-500 text-center px-4">
                     Completa los campos requeridos para ver la vista previa
                   </p>
                 </div>
